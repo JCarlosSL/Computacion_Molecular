@@ -1,7 +1,7 @@
-#Computacion Molecular Biologica
+# Computacion Molecular Biologica
 Algoritmo para analizar Secuencias de Proteinas, aminoacidos, entre otros.
 
-##Integrantes
+## Integrantes
 ```text
 Chambi Syomira
 Dextre Chris
