@@ -19,15 +19,26 @@ class Alligment:
 		self.cadenaA ="AAG" #datacleaning(_cadenaA)
 		self.cadenaB ="AGC" #datacleaning(_cadenaB)
 		self.matrixF = np.zeros((len(self.cadenaB)+1, len(self.cadenaA)+1))
-	
-	def local(self, match, missmatch, gap):
+		self.match = 1
+		self.missmatch = -1
+		self.gap = -2
+
+	def local(self, _match, _missmatch, _gap):
+		self.match = _match
+		self.missmatch = _missmatch
+		self.gap = _gap
+
 		self.makeFLocalMatrix()
-		self.localBackTracking()
+		return self.localBackTracking()
 
 
-	def global(self, match, missmatch, gap):
+	def global(self, _match, _missmatch, _gap):
+		self.match = _match
+		self.missmatch = _missmatch
+		self.gap = _gap
+		
 		self.makeFGlobalMatrix()
-		self.localBackTracking()
+		return self.localBackTracking()
 
 
 	def makeFLocalMatrix(self):
