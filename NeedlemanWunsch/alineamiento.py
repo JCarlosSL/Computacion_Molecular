@@ -23,7 +23,7 @@ class Alligment:
 		self.missmatch = -1
 		self.gap = -5
 
-	def _local(self, _match, _missmatch, _gap):
+	def _local(self, _match=1, _missmatch=-1, _gap=-1):
 		self.match = _match
 		self.missmatch = _missmatch
 		self.gap = _gap
@@ -41,13 +41,9 @@ class Alligment:
 		filas, columnas = len(self.cadenaB), len(self.cadenaA)
 		for i in range(filas):
 			for j in range(columnas):
-				if(self.cadenaB[i] == self.cadenaA[j]):
-					val = self.match
-				else:
-					val = self.missmatch
 				self.matrixF[i+1][j+1] = max(0, self.matrixF[i+1][j]+self.gap,
 					self.matrixF[i][j+1] + self.gap,
-					self.matrixF[i][j] + val)
+					self.matrixF[i][j] + self.matrixS[self.cadenaA[i]][self.cadenaB[j]])
 		print(self.matrixF)
 
 
@@ -62,13 +58,9 @@ class Alligment:
 
 		for i in range(filas):
 			for j in range(columnas):
-				if(self.cadenaB[i] == self.cadenaA[j]):
-					val = self.match
-				else:
-					val = self.missmatch
 				self.matrixF[i+1][j+1] = max(self.matrixF[i+1][j] + self.gap,
 					self.matrixF[i][j+1] + self.gap,
-					self.matrixF[i][j] + val)
+					self.matrixF[i][j] + self.matrixS[self.cadenaA[i]][self.cadenaB[j]])
 		print(self.matrixF)
 
 
