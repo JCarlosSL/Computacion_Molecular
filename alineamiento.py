@@ -16,28 +16,27 @@ class Alligment:
 						'G' : {'A' : -5, 'C' : -7, 'G' : 2, 'T' : -7},
 						'T' : {'A' : -7, 'C' : -5, 'G' : -7, 'T' : 2}}
 		
-		self.cadenaA ="AAG" #datacleaning(_cadenaA)
+		self.cadenaA ="AAAC" #datacleaning(_cadenaA)
 		self.cadenaB ="AGC" #datacleaning(_cadenaB)
+		self.matrixF = np.zeros((len(self.cadenaB)+1, len(self.cadenaA)+1))
 		self.matrixF = np.zeros((len(self.cadenaB)+1, len(self.cadenaA)+1))
 		self.match = 1
 		self.missmatch = -1
 		self.gap = -2
 
-	def local(self, _match, _missmatch, _gap):
+	def alLocal(self, _match, _missmatch, _gap):
 		self.match = _match
 		self.missmatch = _missmatch
 		self.gap = _gap
 		self.makeFLocalMatrix()
-		return #self.localBackTracking()
+		return self.localBackTracking()
 
-
-	def global(self, _match, _missmatch, _gap):
+	def alGlobal(self, _match, _missmatch, _gap):
 		self.match = _match
 		self.missmatch = _missmatch
 		self.gap = _gap
 		self.makeFGlobalMatrix()
-		return #self.localBackTracking()
-
+		return self.localBackTracking()
 
 	def makeFLocalMatrix(self):
 		filas, columnas = len(self.cadenaB), len(self.cadenaA)
@@ -50,9 +49,13 @@ class Alligment:
 
 		for i in range(filas):
 			for j in range(columnas):
+				if(self.cadenaB[i] == self.cadenaA[j]):
+					val = self.match
+				else:
+					val = self.missmatch
 				self.matrixF[i+1][j+1] = max(0, self.matrixF[i+1][j]+self.gap,
 					self.matrixF[i][j+1] + self.gap,
-					self.matrixF[i][j] + self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
+					self.matrixF[i][j] + val)
 		print(self.matrixF)
 
 
@@ -67,16 +70,22 @@ class Alligment:
 
 		for i in range(filas):
 			for j in range(columnas):
-				self.matrixF[i+1][j+1] = max(self.matrixF[i+1][j]+self.gap,
+				if(self.cadenaB[i] == self.cadenaA[j]):
+					val = self.match
+				else:
+					val = self.missmatch
+				self.matrixF[i+1][j+1] = max(self.matrixF[i+1][j] + self.gap,
 					self.matrixF[i][j+1] + self.gap,
-					self.matrixF[i][j] + self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
+					self.matrixF[i][j] + val)
 		print(self.matrixF)
 
 
-	def globalBackTracking(self):
-
-
 	def localBackTracking(self):
+		seq1 = 1
+		seq2 = 2
+		return seq1, seq2
+
+	def globalBackTracking(self):
 		newcadB = ""
 		newcadA = ""
 		m = len(self.cadenaB)-1

@@ -1,5 +1,5 @@
 #from DotMatrix.dotMatrix import dotMatrix
-from NeedlemanWunsch.alineamiento import Alineacion as DP
+from alineamiento import Alligment
 
 """
 Compilacion del Algoritmo Dot Matrix
@@ -18,7 +18,7 @@ gmatrix.plotMatrix()
 alinear = Alligment('P21333.fasta','Q8BTM8.fasta')
 
 #seq1, seq2 = alinear.local(1,-1,-2)
-seq1, seq2 = alinear.global(1,-1,-2)
+seq1, seq2 = alinear.alGlobal(1,-1,-2)
 
-print(seq1)
-print(seq2)
+#print(seq1)
+#print(seq2)
