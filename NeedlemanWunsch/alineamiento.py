@@ -16,8 +16,8 @@ class Alligment:
                         'G' : {'A' : -5, 'C' : -7, 'G' : 2, 'T' : -7},
                         'T' : {'A' : -7, 'C' : -5, 'G' : -7, 'T' : 2}}
         
-        self.cadenaA ="AAG" #datacleaning(_cadenaA)
-        self.cadenaB ="AGC" #datacleaning(_cadenaB)
+        self.cadenaA ="ATAGAAT" #datacleaning(_cadenaA)
+        self.cadenaB ="TTCG" #datacleaning(_cadenaB)
         self.matrixF = np.zeros((len(self.cadenaB)+1, len(self.cadenaA)+1))
         self.match = 1
         self.missmatch = -1
@@ -30,7 +30,7 @@ class Alligment:
         self.makeFLocalMatrix()
         return self.localBackTracking()
 
-    def _global(self, _match=1, _missmatch=-1, _gap=-5):
+    def _global(self, _match=1, _missmatch=-1, _gap=-1):
         self.match = _match
         self.missmatch = _missmatch
         self.gap = _gap
@@ -80,8 +80,8 @@ class Alligment:
         vecB = []
         newcadA = ""
         newcadB = ""
-        m = len(self.cadenaA) - 1
-        n = len(self.cadenaB) - 1
+        n = len(self.cadenaA) - 1
+        m = len(self.cadenaB) - 1
         self.globalBackTracking(m,n,newcadA,newcadB,vecA,vecB)
         return vecA,vecB
 
