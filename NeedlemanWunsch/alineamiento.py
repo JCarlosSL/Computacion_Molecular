@@ -8,8 +8,8 @@ def datacleaning(path,dtype='fasta'):
     return data
 
 
-class Alineacion:
-    def __init__(self,_cadenaA,_cadenaB, _d):
+class Alligment:
+    def __init__(self,_cadenaA,_cadenaB):
         
         self.matrixS = {'A' : {'A' : 2, 'C' : -7, 'G' : -5 , 'T' : -7},
                         'C' : {'A' : -7, 'C' : 2, 'G' : -7, 'T' : -5},
@@ -18,37 +18,74 @@ class Alineacion:
         
         self.cadenaA ="AAG" #datacleaning(_cadenaA)
         self.cadenaB ="AGC" #datacleaning(_cadenaB)
-        self.d = _d
         self.matrixF = np.zeros((len(self.cadenaB)+1, len(self.cadenaA)+1))
+        self.match = 1
+        self.missmatch = -1
+        self.gap = -5
 
-    def makeFmatrix(self):
+    def _local(self, _match, _missmatch, _gap):
+        self.match = _match
+        self.missmatch = _missmatch
+        self.gap = _gap
+        self.makeFLocalMatrix()
+        return self.localBackTracking()
+
+    def _global(self, _match=1, _missmatch=-1, _gap=-5):
+        self.match = _match
+        self.missmatch = _missmatch
+        self.gap = _gap
+        self.makeFGlobalMatrix()
+        return self.globaltraceback()
+
+
+    def makeFLocalMatrix(self):
         filas, columnas = len(self.cadenaB), len(self.cadenaA)
         self.matrixF[0][0] = 0
 
         for i in range(1,filas+1):
-                self.matrixF[i][0] = self.matrixF[i-1][0] + self.d
+            self.matrixF[i][0] = self.matrixF[i-1][0] + self.gap
         for j in range(1,columnas+1):
-          self.matrixF[0][j] = self.matrixF[0][j-1] + self.d
+            self.matrixF[0][j] = self.matrixF[0][j-1] + self.gap
 
         for i in range(filas):
-          for j in range(columnas):
-                self.matrixF[i+1][j+1] = max(self.matrixF[i+1][j]+self.d,
-                        self.matrixF[i][j+1]+self.d,
-                        self.matrixF[i][j]+
-                        self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
+            for j in range(columnas):
+                self.matrixF[i+1][j+1] = max(0, self.matrixF[i+1][j]+self.gap,
+                    self.matrixF[i][j+1] + self.gap,
+                    self.matrixF[i][j] + self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
         print(self.matrixF)
 
-    def traceback(self):
+
+    def makeFGlobalMatrix(self):
+        filas, columnas = len(self.cadenaB), len(self.cadenaA)
+        self.matrixF[0][0] = 0
+
+        for i in range(1,filas+1):
+            self.matrixF[i][0] = self.matrixF[i-1][0] + self.gap
+        for j in range(1,columnas+1):
+            self.matrixF[0][j] = self.matrixF[0][j-1] + self.gap
+
+        for i in range(filas):
+            for j in range(columnas):
+                self.matrixF[i+1][j+1] = max(self.matrixF[i+1][j]+self.gap,
+                    self.matrixF[i][j+1] + self.gap,
+                    self.matrixF[i][j] + self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
+        print(self.matrixF)
+
+
+    def localBackTracking(self):
+        a=0
+
+    def globaltraceback(self):
         vecA = []
         vecB = []
         newcadA = ""
         newcadB = ""
         m = len(self.cadenaA) - 1
         n = len(self.cadenaB) - 1
-        self.backTracking(m,n,newcadA,newcadB,vecA,vecB)
+        self.globalBackTracking(m,n,newcadA,newcadB,vecA,vecB)
         return vecA,vecB
 
-    def backTracking(self,m,n,newcadA,newcadB,vecA,vecB):
+    def  globalBackTracking(self,m,n,newcadA,newcadB,vecA,vecB):
         count = 0
         temporalA = ""
         temporalB = ""
@@ -64,16 +101,19 @@ class Alineacion:
                 newcadB = self.cadenaB[m] + newcadB
                 m-=1
                 n-=1
-            if score == scoreleft + self.d:
+            if score == scoreleft + self.gap:
                 if count==1:
-                    self.backTracking(m,n+1,"-"+temporalA,self.cadenaB[m+1]+temporalB,vecA,vecB)
+                    self.globalBackTracking(m,n+1,"-"+temporalA,
+                            self.cadenaB[m+1]+temporalB,vecA,vecB)
                 else:
                     newcadB = self.cadenaB[m] + newcadB
                     newcadA = "-"+newcadA
                     m-=1
-            if score == scoreup + self.d:
+            if score == scoreup + self.gap:
                 if count == 1:
-                    self.backTracking(m+1,n,self.cadenaA[n+1]+temporalA,"-"+temporalB,vecA,vecB)
+                    self.globalBackTracking(m+1,n,
+                            self.cadenaA[n+1]+temporalA,
+                            "-"+temporalB,vecA,vecB)
                 else:
                     newcadB = "-" +newcadB
                     newcadA = self.cadenaA[n] + newcadA
@@ -95,3 +135,6 @@ class Alineacion:
         
         vecA.append(newcadA)
         vecB.append(newcadB)
+
+
+    
