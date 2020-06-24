@@ -37,35 +37,51 @@ class Alineacion:
                         self.matrixF[i][j]+
                         self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
         print(self.matrixF)
-    def backTracking(self):
-        newcadB = ""
-        newcadA = ""
-        m = len(self.cadenaB)-1
-        n = len(self.cadenaA)-1
 
+    def traceback(self):
+        vecA = []
+        vecB = []
+        newcadA = ""
+        newcadB = ""
+        m = len(self.cadenaA) - 1
+        n = len(self.cadenaB) - 1
+        self.backTracking(m,n,newcadA,newcadB,vecA,vecB)
+        return vecA,vecB
+
+    def backTracking(self,m,n,newcadA,newcadB,vecA,vecB):
+        count = 0
+        temporalA = ""
+        temporalB = ""
         while( m >= 0 and n >= 0):
-            score = self.matrixF[m+1,n+1]
-            
+            score = self.matrixF[m+1,n+1]            
             scorediag = self.matrixF[m,n]
             scoreup = self.matrixF[m+1,n]
             scoreleft = self.matrixF[m,n+1]
             
             if score == scorediag + self.matrixS[self.cadenaB[m]][self.cadenaA[n]]:
+                count = 1
                 newcadA = self.cadenaA[n] + newcadA
                 newcadB = self.cadenaB[m] + newcadB
                 m-=1
                 n-=1
-            elif score == scoreleft + self.d:
-                newcadB = self.cadenaB[m] + newcadB
-                newcadA = "-"+newcadA
-                m-=1
-            else:
-                #score == scoreup + d
-                newcadB = "-" +newcadB
-                newcadA = self.cadenaA[n] + newcadA
-                n-=1
-        
-        print(m,n)
+            if score == scoreleft + self.d:
+                if count==1:
+                    self.backTracking(m,n+1,"-"+temporalA,self.cadenaB[m+1]+temporalB,vecA,vecB)
+                else:
+                    newcadB = self.cadenaB[m] + newcadB
+                    newcadA = "-"+newcadA
+                    m-=1
+            if score == scoreup + self.d:
+                if count == 1:
+                    self.backTracking(m+1,n,self.cadenaA[n+1]+temporalA,"-"+temporalB,vecA,vecB)
+                else:
+                    newcadB = "-" +newcadB
+                    newcadA = self.cadenaA[n] + newcadA
+                    n-=1
+
+            count = 0
+            temporalA = newcadA
+            temporalB = newcadB
         
         while(m >= 0):
             newcadB = self.cadenaB[m] + newcadB
@@ -77,4 +93,5 @@ class Alineacion:
             newcadA = self.cadenaA[n] + newcadA
             n-=1
         
-        return newcadA,newcadB
+        vecA.append(newcadA)
+        vecB.append(newcadB)

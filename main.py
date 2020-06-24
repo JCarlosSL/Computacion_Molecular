@@ -15,11 +15,10 @@ gmatrix.plotMatrix()
 
 
 #Compilacion del Algoritmo Needleman-Wunsvh
-gmatrix = DP('P21333.fasta','Q8BTM8.fasta',-5)
+gmatrix = DP('P21333.fasta','Q8BTM8.fasta',-1)
 
 gmatrix.makeFmatrix()
 
-cad1, cad2 = gmatrix.backTracking()
+vecA,vecB = gmatrix.traceback()
+print(vecA,vecB)
 
-print(cad1)
-print(cad2)
