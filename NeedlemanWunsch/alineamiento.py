@@ -137,4 +137,3 @@ class Alligment:
         vecB.append(newcadB)
 
 
-    
