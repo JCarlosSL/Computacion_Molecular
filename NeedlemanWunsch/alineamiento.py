@@ -27,37 +27,49 @@ class Alligment:
 		self.match = _match
 		self.missmatch = _missmatch
 		self.gap = _gap
-
 		self.makeFLocalMatrix()
-		return self.localBackTracking()
+		return #self.localBackTracking()
 
 
 	def global(self, _match, _missmatch, _gap):
 		self.match = _match
 		self.missmatch = _missmatch
 		self.gap = _gap
-		
 		self.makeFGlobalMatrix()
-		return self.localBackTracking()
+		return #self.localBackTracking()
 
 
 	def makeFLocalMatrix(self):
+		filas, columnas = len(self.cadenaB), len(self.cadenaA)
+		self.matrixF[0][0] = 0
+
+		for i in range(1,filas+1):
+			self.matrixF[i][0] = self.matrixF[i-1][0] + self.gap
+		for j in range(1,columnas+1):
+			self.matrixF[0][j] = self.matrixF[0][j-1] + self.gap
+
+		for i in range(filas):
+			for j in range(columnas):
+				self.matrixF[i+1][j+1] = max(0, self.matrixF[i+1][j]+self.gap,
+					self.matrixF[i][j+1] + self.gap,
+					self.matrixF[i][j] + self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
+		print(self.matrixF)
+
 
 	def makeFGlobalMatrix(self):
 		filas, columnas = len(self.cadenaB), len(self.cadenaA)
 		self.matrixF[0][0] = 0
 
 		for i in range(1,filas+1):
-			self.matrixF[i][0] = self.matrixF[i-1][0] + self.d
+			self.matrixF[i][0] = self.matrixF[i-1][0] + self.gap
 		for j in range(1,columnas+1):
-			self.matrixF[0][j] = self.matrixF[0][j-1] + self.d
+			self.matrixF[0][j] = self.matrixF[0][j-1] + self.gap
 
 		for i in range(filas):
 			for j in range(columnas):
-				self.matrixF[i+1][j+1] = max(self.matrixF[i+1][j]+self.d,
-					self.matrixF[i][j+1]+self.d,
-					self.matrixF[i][j]+
-					self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
+				self.matrixF[i+1][j+1] = max(self.matrixF[i+1][j]+self.gap,
+					self.matrixF[i][j+1] + self.gap,
+					self.matrixF[i][j] + self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
 		print(self.matrixF)
 
 
@@ -82,7 +94,7 @@ class Alligment:
 				newcadB = self.cadenaB[m] + newcadB
 				m-=1
 				n-=1
-			elif score == scoreleft + self.d:
+			elif score == scoreleft + self.gap:
 				newcadB = self.cadenaB[m] + newcadB
 				newcadA = "-"+newcadA
 				m-=1
