@@ -17,7 +17,7 @@ gmatrix.plotMatrix()
 #Compilacion del Algoritmo Needleman-Wunsvh
 alinear = Alligment('P21333.fasta','Q8BTM8.fasta')
 
-#seq1, seq2 = alinear.local(1,-1,-2)
+seq1, seq2 = alinear.alLocal(1,-1,-2)
 seq1, seq2 = alinear.alGlobal(1,-1,-2)
 
 #print(seq1)

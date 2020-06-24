@@ -16,9 +16,8 @@ class Alligment:
 						'G' : {'A' : -5, 'C' : -7, 'G' : 2, 'T' : -7},
 						'T' : {'A' : -7, 'C' : -5, 'G' : -7, 'T' : 2}}
 		
-		self.cadenaA ="AAAC" #datacleaning(_cadenaA)
-		self.cadenaB ="AGC" #datacleaning(_cadenaB)
-		self.matrixF = np.zeros((len(self.cadenaB)+1, len(self.cadenaA)+1))
+		self.cadenaA ="ATACTGGG" #datacleaning(_cadenaA)
+		self.cadenaB ="TGACTGAG" #datacleaning(_cadenaB)
 		self.matrixF = np.zeros((len(self.cadenaB)+1, len(self.cadenaA)+1))
 		self.match = 1
 		self.missmatch = -1
@@ -40,13 +39,6 @@ class Alligment:
 
 	def makeFLocalMatrix(self):
 		filas, columnas = len(self.cadenaB), len(self.cadenaA)
-		self.matrixF[0][0] = 0
-
-		for i in range(1,filas+1):
-			self.matrixF[i][0] = self.matrixF[i-1][0] + self.gap
-		for j in range(1,columnas+1):
-			self.matrixF[0][j] = self.matrixF[0][j-1] + self.gap
-
 		for i in range(filas):
 			for j in range(columnas):
 				if(self.cadenaB[i] == self.cadenaA[j]):
