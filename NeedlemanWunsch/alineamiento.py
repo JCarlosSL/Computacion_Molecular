@@ -10,29 +10,57 @@ def datacleaning(path,dtype='fasta'):
 
 class Alligment:
 	def __init__(self,_cadenaA,_cadenaB):
-		
+		"""
 		self.matrixS = {'A' : {'A' : 2, 'C' : -7, 'G' : -5 , 'T' : -7},
 						'C' : {'A' : -7, 'C' : 2, 'G' : -7, 'T' : -5},
 						'G' : {'A' : -5, 'C' : -7, 'G' : 2, 'T' : -7},
 						'T' : {'A' : -7, 'C' : -5, 'G' : -7, 'T' : 2}}
+		"""
+		self.matrixS = {'A':{'A':2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'C':{'A':-2,'C':2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'D':{'A':-2,'C':-2,'D':2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'E':{'A':-2,'C':-2,'D':-2,'E':2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'F':{'A':-2,'C':-2,'D':-2,'E':-2,'F':2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'G':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'H':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'I':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'K':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'L':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'M':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'N':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'P':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'Q':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'R':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'S':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':2,'T':-2,'V':-2,'W':-2,'Y':-2},
+						'T':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':2,'V':-2,'W':-2,'Y':-2},
+						'V':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':2,'W':-2,'Y':-2},
+						'W':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':2,'Y':-2},
+						'Y':{'A':-2,'C':-2,'D':-2,'E':-2,'F':-2,'G':-2,'H':-2,'I':-2,'K':-2,'L':-2,'M':-2,'N':-2,'P':-2,'Q':-2,'R':-2,'S':-2,'T':-2,'V':-2,'W':-2,'Y':2}}
+
 		
-		self.cadenaA ="ATAGAAT" #datacleaning(_cadenaA)
-		self.cadenaB ="TTCG" #datacleaning(_cadenaB)
+		self.cadenaA = datacleaning(_cadenaA)
+		self.cadenaB = datacleaning(_cadenaB)
 		self.matrixF = np.zeros((len(self.cadenaB)+1, len(self.cadenaA)+1))
-		self.match = 1
-		self.missmatch = -1
-		self.gap = -5
+		#self.match = 1
+		#self.missmatch = -1
+		self.gap = -1
+	def updateMatrixS(self,match,missmatch):
+		for key in self.matrixS:
+			for key2 in self.matrixS[key]:
+				if(key == key2):
+					self.matrixS[key][key2] = match
+				else:
+					self.matrixS[key][key2] = missmatch
 
 	def _local(self, _match=1, _missmatch=-1, _gap=-1):
-		self.match = _match
-		self.missmatch = _missmatch
+		self.updateMatrixS(_match,_missmatch)
 		self.gap = _gap
 		self.makeFLocalMatrix()
 		return self.localBackTracking()
 
-	def _global(self, _match=1, _missmatch=-1, _gap=-1):
-		self.match = _match
-		self.missmatch = _missmatch
+	def _global(self, _match=0, _missmatch=0, _gap=-2):
+		if(_match != 0 and _missmatch != 0):
+			self.updateMatrixS(_match,_missmatch)
 		self.gap = _gap
 		self.makeFGlobalMatrix()
 		return self.globaltraceback()
