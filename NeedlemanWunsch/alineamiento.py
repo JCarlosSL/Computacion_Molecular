@@ -16,7 +16,7 @@ class Alligment:
 						'G' : {'A' : -5, 'C' : -7, 'G' : 2, 'T' : -7},
 						'T' : {'A' : -7, 'C' : -5, 'G' : -7, 'T' : 2}}
 		
-		self.cadenaA ="ATAG" #datacleaning(_cadenaA)
+		self.cadenaA ="ATAGAAT" #datacleaning(_cadenaA)
 		self.cadenaB ="TTCG" #datacleaning(_cadenaB)
 		self.matrixF = np.zeros((len(self.cadenaB)+1, len(self.cadenaA)+1))
 		self.match = 1
@@ -43,7 +43,7 @@ class Alligment:
 			for j in range(columnas):
 				self.matrixF[i+1][j+1] = max(0, self.matrixF[i+1][j]+self.gap,
 					self.matrixF[i][j+1] + self.gap,
-					self.matrixF[i][j] + self.matrixS[self.cadenaA[i]][self.cadenaB[j]])
+					self.matrixF[i][j] + self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
 		print(self.matrixF)
 
 
@@ -60,7 +60,7 @@ class Alligment:
 			for j in range(columnas):
 				self.matrixF[i+1][j+1] = max(self.matrixF[i+1][j] + self.gap,
 					self.matrixF[i][j+1] + self.gap,
-					self.matrixF[i][j] + self.matrixS[self.cadenaA[i]][self.cadenaB[j]])
+					self.matrixF[i][j] + self.matrixS[self.cadenaB[i]][self.cadenaA[j]])
 		print(self.matrixF)
 
 
@@ -72,8 +72,8 @@ class Alligment:
 		vecB = []
 		newcadA = ""
 		newcadB = ""
-		m = len(self.cadenaA) - 1
-		n = len(self.cadenaB) - 1
+		n = len(self.cadenaA) - 1
+		m = len(self.cadenaB) - 1
 		self.globalBackTracking(m,n,newcadA,newcadB,vecA,vecB)
 		return vecA,vecB
 
