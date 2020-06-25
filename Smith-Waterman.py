@@ -7,7 +7,6 @@ def datacleaning(path,dtype='fasta'):
         data = str(record.seq.upper())
     return data
 
-
 class Alligment:
     def __init__(self,_cadenaA,_cadenaB):
         
@@ -42,6 +41,7 @@ class Alligment:
         self.cadenaB = _cadenaB
         self.matrixF = np.zeros((len(self.cadenaB)+1, len(self.cadenaA)+1))
         self.gap = 0
+        
     def updateMatrixS(self,match,missmatch):
         for key in self.matrixS:
             for key2 in self.matrixS[key]:
@@ -54,17 +54,13 @@ class Alligment:
         self.updateMatrixS(_match,_missmatch)
         self.gap = _gap
         self.makeFLocalMatrix()
-        return self.localBackTracking()
+        return self.localBackTracking(_match, _missmatch, _gap)
 
     def makeFLocalMatrix(self):
         max_valor = 0
         list_posiciones = []
         filas, columnas = len(self.cadenaB), len(self.cadenaA)
-        self.matrixF[0][0] = 0
-        for i in range(1,filas+1):
-            self.matrixF[i][0] = 0
-        for j in range(1,columnas+1):
-            self.matrixF[0][j] = 0
+        
         for i in range(filas):
             for j in range(columnas):
                 self.matrixF[i+1][j+1] = max(
@@ -78,8 +74,8 @@ class Alligment:
                     list_posiciones.append([i,j])
                 elif self.matrixF[i+1][j+1] == max_valor:
                     list_posiciones.append([i,j])
-        #print(self.matrixF)
         return max_valor, list_posiciones
+    
     def score(self, match, missmatch, gap, cadA, cadB):
        score_=0
        for i in range(len(cadA)):
@@ -91,8 +87,9 @@ class Alligment:
                score_=score_ + missmatch
        return score_
     
-    def localBackTracking(self):
+    def localBackTracking(self, match, missmatch, gap):
         _max_valor, _list_posiciones = self.makeFLocalMatrix()
+        print(self.matrixF)
         num = len(_list_posiciones)/2 + 1
         num = int(num)
         newcadA = ""
@@ -109,10 +106,10 @@ class Alligment:
                 n-=1
             print(newcadA)
             print(newcadB)
-            print(self.score(1,-1,-2,newcadA,newcadB))
+            print(self.score(match, missmatch, gap, newcadA,newcadB))
         
-#alinear = Alligment('ATACTGGG','TGACTGAG')
-#alinear._local(1,-1,-2)
+alinear = Alligment('ATACTGGG','TGACTGAG')
+alinear._local(1,-1,-2)
 
-alinear = Alligment('AAG','AGC')
-alinear._local(2,-7,-5)
+#alinear = Alligment('AAG','AGC')
+#alinear._local(2,-7,-5)
