@@ -3,6 +3,10 @@ import numpy as np
 import cv2 as cv
 import matplotlib.pyplot as plt
 
+from scipy.spatial.distance import pdist
+from scipy.cluster.hierarchy import linkage
+import plotly.figure_factory as ff
+
 def datacleaning(path,dtype='fasta'):
     sequences = SeqIO.parse(path,dtype)
     key = None
@@ -33,7 +37,7 @@ def convertimage(data):
 
 def histogram(matrix):
     height,width = matrix.shape
-    #values = [1,17,34,51,68,85,102,119,136,153,170,187,204,221,238,255]
+    values = [1,17,34,51,68,85,102,119,136,153,170,187,204,221,238,255]
     hist = {0:0,1:0,17:0,34:0,51:0,68:0,85:0,102:0,119:0,136:0,
             153:0,170:0,187:0,204:0,221:0,238:0,255:0}
     for x in range(height):
@@ -60,29 +64,23 @@ def _sigma(mu,p):
     sigma2 = 0
     for key in p:
         sigma2 +=  np.power((key-mu),2)*p[key]
-    sigma = np.sqrt(sigma2)
-    return sigma
+    return sigma2
 
 def mu_3(sigma,mu,p):
     #skewness
     """cero si el histograma es simetrico alrededor de la media"""
     mu3 = 0
     for key in p:
-        mu3 += np.power(key-mu,3)*p[key]
-    return mu3*np.power(sigma,-3)
+        mu3 += np.power((key - mu),3)*p[key]
+    return mu3/(sigma*np.sqrt(sigma))
 
-def mu_4(sigma,mu,p,n):
+def mu_4(sigma,mu,p):
     #Kurtosis
     """medida de planeidad del histograma"""
     mu4 = 0
-    #for key in p:
-    for i in range(n):
-        if i in p:
-            pi=p[i]
-        else: pi=0
-        mu4 += np.power(i-mu,4)*pi - 3
-        #mu4 += pow(key-mu,4)*p[key]-3
-    return np.power(sigma,-4)*mu4
+    for key in p:
+        mu4 += np.power((key - mu),4)*p[key]
+    return (mu4/np.power(sigma,2))-3
 
 def Energy(p):
     #energia
@@ -105,33 +103,32 @@ def procesamiento(data):
     hist,prob = histogram(image)
     #plt.hist(image.ravel(),255,[0,255])
     #plt.show()
-    x,y=image.shape
     mu = _mu(prob)
     sigma = _sigma(mu,prob)
     mu3 = mu_3(sigma,mu,prob)
-    mu4 = mu_4(sigma,mu,prob,x*y)
+    mu4 = mu_4(sigma,mu,prob)
     E = Energy(prob)
     H = Entropy(prob)
     return [mu3,mu4,E,H]
-from scipy.spatial.distance import pdist
-from scipy.cluster.hierarchy import linkage
-v = []
-names = []
-for i in range(13):
-    data,key = datacleaning('sequence_'+str(i)+'.fasta')
-    v.append(procesamiento(data))
-    names.append(key)
 
-y = pdist(v,'euclidean')
-x = linkage(y,'average','euclidean')
+if __name__=='__main__':
+    v = []
+    names = []
 
-import plotly.figure_factory as ff
+    for i in range(13):
+        data,key = datacleaning('sequence_'+str(i)+'.fasta')
+        v.append(procesamiento(data))
+        names.append(key)
 
-fig = ff.create_dendrogram(x,orientation='left',labels=names)
-fig.update_layout(width=800,height=800)
-fig.show()
+    y = pdist(v,'euclidean')
+    x = linkage(y,'average','euclidean')
+
+    fig = ff.create_dendrogram(x,orientation='left',labels=names)
+    fig.update_layout(width=800,height=800)
+    fig.show()
 """
-data,key = datacleaning('sequence.fasta')
+data,key = datacleaning('sequence_10.fasta')
+print(key,procesamiento(data))
 image = convertimage(data)
 cv.imwrite('image.png',image)
 plt.imshow(image,'gray')
